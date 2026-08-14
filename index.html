@@ -247,6 +247,9 @@
     .latency-bars i { display: block; width: 7px; background: #38434a; height: var(--h); animation: bars 1.9s ease-in-out infinite alternate; animation-delay: var(--d); }
     .latency-bars i:nth-child(3n) { background: var(--accent); }
     @keyframes bars { to { height: calc(var(--h) * .55); opacity: .6; } }
+    @keyframes mobileOrbit { to { transform: rotate(360deg); } }
+    @keyframes mobileOrbitReverse { to { transform: rotate(-360deg); } }
+    @keyframes coreBreathe { 50% { box-shadow: 0 0 48px rgba(var(--accent-rgb),.22); } }
     .node-viz { width: 150px; height: 120px; position: relative; }
     .node-viz i { width: 9px; height: 9px; border: 1px solid var(--accent); border-radius: 50%; position: absolute; left: var(--x); top: var(--y); }
     .node-viz::before, .node-viz::after { content: ""; position: absolute; left: 24px; top: 38px; width: 100px; height: 1px; background: #344047; transform: rotate(22deg); }
@@ -426,6 +429,48 @@
       .pipeline i { min-height: 22px; width: 1px; flex: none; margin-left: 10px; }
       footer { flex-direction: column; gap: 22px; }
       .cursor { display: none; }
+
+      /* Native mobile flow: avoid sticky viewport jumps from browser chrome resizing. */
+      .scroll-story { height: auto; padding: 88px 0; overflow: visible; }
+      .story-sticky { height: auto; min-height: 0; position: relative; overflow: visible; }
+      .story-grid { padding-block: 0; gap: 40px; }
+      .story-copy { min-height: 0; position: relative; }
+      .story-copy > .eyebrow { display: none; }
+      .story-copy::before { content: ""; position: absolute; left: 14px; top: 9px; bottom: 9px; width: 1px; background: linear-gradient(var(--accent), var(--line) 88%); }
+      .story-frame { position: relative; inset: auto; opacity: 1; margin: 0; padding: 27px 12px 30px 46px; border-top: 1px solid var(--line); }
+      .story-frame[data-frame="3"] { border-bottom: 1px solid var(--line); }
+      .story-frame::before { content: ""; position: absolute; left: 9px; top: 31px; width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--accent); background: var(--bg); box-shadow: 0 0 0 5px rgba(var(--accent-rgb),.07); }
+      .story-frame h2 { font-size: clamp(2rem, 10vw, 2.55rem); line-height: .95; margin: 12px 0; }
+      .story-frame p { max-width: 290px; font-size: .77rem; line-height: 1.7; }
+      .story-status { display: none; }
+      .story-viz { width: 100%; height: 310px; max-height: none; margin: 0; border: 1px solid var(--line); background: radial-gradient(circle at 50% 52%, rgba(var(--accent-rgb),.09), transparent 40%), var(--bg-soft); overflow: hidden; }
+      .story-viz::before { content: "SYSTEM BUILD / 01—04"; top: 17px; left: 17px; right: auto; color: var(--accent); font-size: .52rem; z-index: 3; }
+      .story-system { width: 225px; }
+      .story-lines path { stroke-dashoffset: 0; stroke: #46535b; }
+      .story-coordinate.x { left: 14px; top: auto; bottom: 13px; }
+      .story-coordinate.y { right: 13px; bottom: 13px; }
+      .story-core { width: 68px; height: 68px; animation: coreBreathe 3.2s ease-in-out infinite; }
+      .story-core::before { width: 21px; height: 21px; }
+      .story-core span { top: calc(100% + 12px); font-size: .46rem; }
+      .story-system .orbit.one { animation: mobileOrbit 18s linear infinite; }
+      .story-system .orbit.two { animation: mobileOrbitReverse 24s linear infinite; }
+      .story-system .orbit.three { animation: mobileOrbit 28s linear infinite; }
+
+      #work.work-scroll { height: auto; padding: 88px 0; overflow: visible; }
+      .work-scroll > .wrap { height: auto; position: relative; top: auto; padding-top: 0; overflow: visible; }
+      .work-scroll .section-head { margin-bottom: 45px; }
+      .work-scroll .project, .work-scroll .project:nth-child(odd) { position: relative; inset: auto; opacity: 1; transform: none !important; pointer-events: auto !important; display: flex; grid-template-columns: none; padding: 30px 0 70px; }
+      .work-scroll .project:nth-child(odd) .project-copy { order: 1; }
+      .work-scroll .project:nth-child(odd) .project-visual { order: 2; }
+      .work-scroll .project-copy, .work-scroll .project-visual { opacity: 1 !important; transform: none !important; }
+      .work-scroll .project-desc { display: block; }
+      .work-scroll .project-visual { height: 330px; flex: none; }
+
+      .scroll-panel { height: auto !important; padding: 88px 0 !important; overflow: visible; }
+      .scroll-panel > .wrap { height: auto; position: relative; top: auto; overflow: visible; }
+      #about.scroll-panel > .wrap { justify-content: flex-start; }
+      #contact.scroll-panel { min-height: 0; }
+      #contact.scroll-panel footer { position: relative; bottom: auto; margin-top: 55px; }
     }
     @media (pointer: coarse) { .cursor { display: none; } }
     @media (prefers-reduced-motion: reduce) {
@@ -613,7 +658,7 @@
     <section id="about" class="scroll-panel" data-section="03">
       <div class="wrap about-grid">
         <div class="reveal scroll-controlled"><span class="eyebrow">02 / About</span><h2 class="statement">I BUILD<br>SYSTEMS,<br><span>NOT JUST</span><br>INTERFACES.</h2><p class="about-copy">I’m a software engineer focused on backend systems and product development. I hold a Bachelor of Science in Computer Science, completed in January 2025. I like taking complicated operational problems, finding the clean architecture inside them, and shipping software people can depend on.</p></div>
-        <div class="about-side reveal scroll-controlled"><figure class="portrait"><span class="portrait-orbit" aria-hidden="true"></span><img src="shaka.png" alt="Kyomuhendo Isihaka at his software engineering workspace" width="1122" height="1402" loading="lazy" decoding="async"></figure><div class="stats"><div class="stat"><strong>2025</strong><span>BSc COMPUTER SCIENCE</span></div><div class="stat"><strong>03+</strong><span>YEARS BUILDING</span></div><div class="stat"><strong>10+</strong><span>REAL-WORLD SYSTEMS</span></div><div class="stat"><strong>360°</strong><span>WEB / MOBILE / BACKEND</span></div><div class="stat"><strong>UG</strong><span>LIRA, UGANDA</span></div></div></div>
+        <div class="about-side reveal scroll-controlled"><figure class="portrait"><span class="portrait-orbit" aria-hidden="true"></span><img src="./shaka.png" alt="Kyomuhendo Isihaka at his software engineering workspace" width="1122" height="1402" loading="lazy" decoding="async"></figure><div class="stats"><div class="stat"><strong>2025</strong><span>BSc COMPUTER SCIENCE</span></div><div class="stat"><strong>03+</strong><span>YEARS BUILDING</span></div><div class="stat"><strong>10+</strong><span>REAL-WORLD SYSTEMS</span></div><div class="stat"><strong>360°</strong><span>WEB / MOBILE / BACKEND</span></div><div class="stat"><strong>UG</strong><span>LIRA, UGANDA</span></div></div></div>
       </div>
     </section>
 
@@ -639,6 +684,8 @@
   <script src="anime.min.js"></script>
   <script>
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobileLayout = matchMedia('(max-width: 620px)').matches;
+    const scrollScrub = !reducedMotion && !mobileLayout;
     const $ = (s, p = document) => p.querySelector(s);
     const $$ = (s, p = document) => [...p.querySelectorAll(s)];
 
@@ -700,7 +747,7 @@
       if (p !== storyTarget) storyRaf = requestAnimationFrame(drawStory);
     }
     function queueStory() {
-      if (reducedMotion) return;
+      if (!scrollScrub) return;
       storyTarget = storyProgress();
       if (!storyRaf) storyRaf = requestAnimationFrame(drawStory);
     }
@@ -739,14 +786,14 @@
       if (p !== workTarget) workRaf = requestAnimationFrame(drawWork);
     }
     function queueWork() {
-      if (reducedMotion) return;
+      if (!scrollScrub) return;
       workTarget = workProgress();
       if (!workRaf) workRaf = requestAnimationFrame(drawWork);
     }
     addEventListener('scroll', queueWork, { passive: true });
     addEventListener('resize', queueWork, { passive: true });
     queueWork();
-    if (reducedMotion) workProjects.forEach(project => { project.tabIndex = 0; project.setAttribute('aria-hidden', 'false'); });
+    if (!scrollScrub) workProjects.forEach(project => { project.tabIndex = 0; project.setAttribute('aria-hidden', 'false'); });
 
     const clamp01 = value => Math.max(0, Math.min(1, value));
     const panelStates = $$('.scroll-panel').map(section => ({ section, current: 0, target: 0 }));
@@ -812,7 +859,7 @@
       if (moving) panelsRaf = requestAnimationFrame(drawPanels);
     }
     function queuePanels() {
-      if (reducedMotion) return;
+      if (!scrollScrub) return;
       panelStates.forEach(state => { state.target = panelProgress(state.section); });
       if (!panelsRaf) panelsRaf = requestAnimationFrame(drawPanels);
     }
@@ -831,9 +878,48 @@
         anime({ targets: entry.target, translateY: [42, 0], opacity: [0, 1], duration: 850, easing: 'easeOutExpo' });
         observer.unobserve(entry.target);
       }), { threshold: .12 });
-      $$('.reveal:not(.scroll-controlled)').forEach(el => { el.style.opacity = 0; observer.observe(el); });
+      $$(scrollScrub ? '.reveal:not(.scroll-controlled)' : '.reveal').forEach(el => { el.style.opacity = 0; observer.observe(el); });
 
-      if (!$('#stack').classList.contains('scroll-panel')) {
+      if (mobileLayout) {
+        const mobileStoryVisual = $('.story-viz');
+        const mobileStoryFrames = $$('.story-frame');
+        anime.set(mobileStoryVisual, { opacity: 0, translateY: 48, scale: .94 });
+        anime.set('.story-lines path', { strokeDashoffset: 520 });
+        anime.set('.story-core, .orbit-node', { opacity: 0, scale: .35 });
+        mobileStoryFrames.forEach(frame => anime.set(frame, { opacity: 0, translateY: 34 }));
+
+        const diagramObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          anime.timeline({ easing: 'easeOutExpo' })
+            .add({ targets: mobileStoryVisual, opacity: [0, 1], translateY: [48, 0], scale: [.94, 1], duration: 700 })
+            .add({ targets: '.story-lines path', strokeDashoffset: [520, 0], duration: 850 }, '-=420')
+            .add({ targets: '.story-core', opacity: [0, 1], scale: [.35, 1], rotate: [-90, 0], duration: 620 }, '-=680')
+            .add({ targets: '.orbit-node', opacity: [0, 1], scale: [.35, 1], delay: anime.stagger(90), duration: 420 }, '-=470');
+          diagramObserver.disconnect();
+        }), { threshold: .28 });
+        diagramObserver.observe(mobileStoryVisual);
+
+        const frameObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          anime({ targets: entry.target, opacity: [0, 1], translateY: [34, 0], duration: 720, easing: 'easeOutExpo' });
+          frameObserver.unobserve(entry.target);
+        }), { threshold: .2, rootMargin: '0px 0px -6% 0px' });
+        mobileStoryFrames.forEach(frame => frameObserver.observe(frame));
+
+        let mobileStoryRaf = 0;
+        function updateMobileStoryMotion() {
+          mobileStoryRaf = 0;
+          const rect = $('#system-story').getBoundingClientRect();
+          const p = clamp01((innerHeight - rect.top) / (innerHeight + rect.height));
+          anime.set('.story-system', { translateY: 14 - p * 28, rotateZ: -4 + p * 8 });
+          anime.set('.story-coordinate.x', { translateX: p * 34 });
+          anime.set('.story-coordinate.y', { translateY: (1 - p) * -18 });
+        }
+        addEventListener('scroll', () => { if (!mobileStoryRaf) mobileStoryRaf = requestAnimationFrame(updateMobileStoryMotion); }, { passive: true });
+        updateMobileStoryMotion();
+      }
+
+      if (!scrollScrub || !$('#stack').classList.contains('scroll-panel')) {
         const stackObserver = new IntersectionObserver(entries => entries.forEach(entry => {
           if (!entry.isIntersecting) return;
           anime({ targets: '.stack-row', translateX: [-25, 0], opacity: [0, 1], delay: anime.stagger(80), duration: 620, easing: 'easeOutQuad' });
